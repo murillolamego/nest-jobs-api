@@ -59,8 +59,8 @@ async function bootstrap() {
     expressSwaggerCustomOptions,
   );
 
-  const port = configService.get<string>('PORT');
-  await app.listen(port);
-  console.log(`Server listening on port ${port}`);
+  const serverPort = configService.get<string>('SERVER_PORT');
+  await app.listen(serverPort);
+  console.log(`Server listening on port ${serverPort}`);
 }
 bootstrap();
