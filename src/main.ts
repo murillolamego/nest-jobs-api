@@ -33,7 +33,7 @@ const expressSwaggerCustomOptions: ExpressSwaggerCustomOptions = {
     tagsSorter: 'alpha',
   },
   customCss: customStyle,
-  customSiteTitle: 'MeuLar API',
+  customSiteTitle: 'Nest Jobs API',
 };
 
 async function bootstrap() {
