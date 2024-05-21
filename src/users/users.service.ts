@@ -87,7 +87,6 @@ export class UsersService {
 
       return updatedUserWithoutPassword;
     } catch (error) {
-      console.log(error);
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
           throw new NotFoundException(`user with id ${id} not found`);

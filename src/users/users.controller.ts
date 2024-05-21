@@ -16,12 +16,14 @@ import { User } from '@prisma/client';
 import { cuidPipe } from '../pipes/cuid.pipe';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserWithoutPasswordEntity } from './entities/user.entity';
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Post()
   @ApiResponse({
     status: 201,

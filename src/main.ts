@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import helmet from 'helmet';
 
 interface ExpressSwaggerCustomOptions {
   explorer?: boolean;
@@ -36,6 +37,8 @@ const expressSwaggerCustomOptions: ExpressSwaggerCustomOptions = {
   customSiteTitle: 'Nest Jobs API',
 };
 
+declare const module: any;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
@@ -47,6 +50,8 @@ async function bootstrap() {
     .build();
 
   app.enableCors();
+  //app.use(csurf());
+  app.use(helmet());
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('v1');
 
@@ -61,6 +66,12 @@ async function bootstrap() {
 
   const serverPort = configService.get<string>('SERVER_PORT');
   await app.listen(serverPort);
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
+
   console.log(`Server listening on port ${serverPort}`);
 }
 bootstrap();
