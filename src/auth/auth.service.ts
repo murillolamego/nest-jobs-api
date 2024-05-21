@@ -42,12 +42,12 @@ export class AuthService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
-          throw new NotFoundException(`User with email ${email} not found`);
+          throw new NotFoundException(`user with email ${email} not found`);
         }
       }
       if (error instanceof UnauthorizedException) {
         throw new UnauthorizedException(
-          `Invalid credentials provided, please try again`,
+          `invalid credentials provided, please try again`,
         );
       }
       throw new InternalServerErrorException();

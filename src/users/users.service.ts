@@ -11,7 +11,7 @@ import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
     try {
@@ -24,7 +24,7 @@ export class UsersService {
 
       return userWithoutPassword;
     } catch (error) {
-      throw new ServiceUnavailableException('User creation on database failed');
+      throw new ServiceUnavailableException('user creation on database failed');
     }
   }
 
@@ -43,7 +43,7 @@ export class UsersService {
       return usersWithoutPassword;
     } catch (error) {
       throw new ServiceUnavailableException(
-        'Fetching users from database failed',
+        'fetching users from database failed',
       );
     }
   }
@@ -62,11 +62,11 @@ export class UsersService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
-          throw new NotFoundException(`User with id ${id} not found`);
+          throw new NotFoundException(`user with id ${id} not found`);
         }
       }
       throw new ServiceUnavailableException(
-        'Fetching user from database failed',
+        'fetching user from database failed',
       );
     }
   }
@@ -90,10 +90,10 @@ export class UsersService {
       console.log(error);
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
-          throw new NotFoundException(`User with id ${id} not found`);
+          throw new NotFoundException(`user with id ${id} not found`);
         }
       }
-      throw new ServiceUnavailableException('Updating user on database failed');
+      throw new ServiceUnavailableException('updating user on database failed');
     }
   }
 
@@ -112,10 +112,10 @@ export class UsersService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
-          throw new NotFoundException(`User with id ${id} not found`);
+          throw new NotFoundException(`user with id ${id} not found`);
         }
       }
-      throw new ServiceUnavailableException('Removing user on database failed');
+      throw new ServiceUnavailableException('removing user on database failed');
     }
   }
 }

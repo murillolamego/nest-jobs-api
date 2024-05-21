@@ -15,8 +15,30 @@ export function exclude<Data, Key extends keyof Data>(
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  constructor(private configService: ConfigService) {
-    super();
+  constructor(private readonly configService: ConfigService) {
+    super({
+      log:
+        process.env.NODE_ENV === 'development'
+          ? [
+              {
+                emit: 'stdout',
+                level: 'query',
+              },
+              {
+                emit: 'stdout',
+                level: 'error',
+              },
+              {
+                emit: 'stdout',
+                level: 'info',
+              },
+              {
+                emit: 'stdout',
+                level: 'warn',
+              },
+            ]
+          : [],
+    });
   }
 
   async onModuleInit(): Promise<void> {

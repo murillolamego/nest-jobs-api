@@ -3,7 +3,7 @@
 services:
   postgres:
     image: postgres
-    container_name: nest_jobs_postgres
+    container_name: nest_jobs_${NODE_ENV}_postgres
     restart: unless-stopped
     environment:
       - POSTGRES_USER=${DATABASE_USER}
