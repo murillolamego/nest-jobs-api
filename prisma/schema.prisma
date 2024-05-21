@@ -16,3 +16,18 @@ model User {
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
 }
+
+model Jobs {
+  id             String    @id @default(cuid())
+  title          String
+  companyName    String
+  companyWebsite String
+  about          String
+  location       String
+  locationType   String
+  seniority      String
+  type           String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+}
