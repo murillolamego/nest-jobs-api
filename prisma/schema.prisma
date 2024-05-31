@@ -17,7 +17,7 @@ model User {
   deletedAt   DateTime?
 }
 
-model Jobs {
+model Job {
   id             String    @id @default(cuid())
   title          String
   companyName    String

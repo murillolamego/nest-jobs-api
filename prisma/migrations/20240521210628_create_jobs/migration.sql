@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "Jobs" (
+CREATE TABLE "Job" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "companyName" TEXT NOT NULL,
@@ -13,5 +13,5 @@ CREATE TABLE "Jobs" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
 
-    CONSTRAINT "Jobs_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Job_pkey" PRIMARY KEY ("id")
 );
