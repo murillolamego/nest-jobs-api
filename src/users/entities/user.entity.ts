@@ -5,12 +5,15 @@ export class UserEntity implements User {
   email: string;
   password: string;
   displayName: string | null;
+  refreshToken: string | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
 }
 
-export class UserWithoutPasswordEntity implements Omit<User, 'password'> {
+export class UserSanitizedEntity
+  implements Omit<User, 'password' | 'refreshToken'>
+{
   id: string;
   email: string;
   displayName: string | null;

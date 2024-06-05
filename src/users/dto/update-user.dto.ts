@@ -3,6 +3,7 @@ import {
   IsOptional,
   IsString,
   IsStrongPassword,
+  Length,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -19,7 +20,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @IsOptional()
   @IsStrongPassword()
-  @MaxLength(254)
+  @MaxLength(50)
   password?: string;
 
   @IsOptional()
@@ -33,4 +34,9 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @MinLength(3)
   @MaxLength(20)
   displayName?: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(60)
+  refreshToken?: string;
 }

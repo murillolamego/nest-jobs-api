@@ -74,7 +74,7 @@ describe('AuthService', () => {
     it('should return the access_token for the user', async () => {
       const response = await service.signIn(testUser);
 
-      expect(response.access_token).toBeTruthy();
+      expect(response.accessToken).toBeTruthy();
       expect(prisma.user.findUniqueOrThrow).toHaveBeenCalledTimes(1);
       expect(prisma.user.findUniqueOrThrow).toHaveBeenCalledWith({
         where: {

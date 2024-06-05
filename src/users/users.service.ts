@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+
 import {
   Injectable,
   NotFoundException,
@@ -8,27 +9,28 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService, exclude } from '../database/prisma.service';
 import { Prisma, User } from '@prisma/client';
+import { UserSanitizedEntity } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
+  async create(createUserDto: CreateUserDto): Promise<UserSanitizedEntity> {
     try {
       createUserDto.password = await bcrypt.hash(createUserDto.password, 10);
 
       const user = await this.prisma.user.create({
         data: createUserDto,
       });
-      const userWithoutPassword = exclude(user, ['password']);
+      const userSanitized = exclude(user, ['password', 'refreshToken']);
 
-      return userWithoutPassword;
+      return userSanitized;
     } catch (error) {
       throw new ServiceUnavailableException('user creation on database failed');
     }
   }
 
-  async findAll(): Promise<Omit<User, 'password'>[]> {
+  async findAll(): Promise<UserSanitizedEntity[]> {
     try {
       const users = await this.prisma.user.findMany({
         where: {
@@ -36,11 +38,11 @@ export class UsersService {
         },
       });
 
-      const usersWithoutPassword = users.map((user) => {
-        return exclude(user, ['password']);
+      const usersSanitized = users.map((user) => {
+        return exclude(user, ['password', 'refreshToken']);
       });
 
-      return usersWithoutPassword;
+      return usersSanitized;
     } catch (error) {
       throw new ServiceUnavailableException(
         'fetching users from database failed',
@@ -48,7 +50,7 @@ export class UsersService {
     }
   }
 
-  async findOne(id: string): Promise<Omit<User, 'password'>> {
+  async findOne(id: string): Promise<UserSanitizedEntity> {
     try {
       const user = await this.prisma.user.findUniqueOrThrow({
         where: {
@@ -56,9 +58,9 @@ export class UsersService {
           deletedAt: null,
         },
       });
-      const userWithoutPassword = exclude(user, ['password']);
+      const userSanitized = exclude(user, ['password', 'refreshToken']);
 
-      return userWithoutPassword;
+      return userSanitized;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
@@ -83,9 +85,9 @@ export class UsersService {
         },
         data: updateUserDto,
       });
-      const updatedUserWithoutPassword = exclude(updatedUser, ['password']);
+      const updatedUserSanitized = exclude(updatedUser, ['password']);
 
-      return updatedUserWithoutPassword;
+      return updatedUserSanitized;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
@@ -105,9 +107,9 @@ export class UsersService {
         },
       });
 
-      const deletedUserWithoutPassword = exclude(deletedUser, ['password']);
+      const deletedUserSanitized = exclude(deletedUser, ['password']);
 
-      return deletedUserWithoutPassword;
+      return deletedUserSanitized;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
@@ -115,6 +117,28 @@ export class UsersService {
         }
       }
       throw new ServiceUnavailableException('removing user on database failed');
+    }
+  }
+
+  async unsafeFindOneById(id: string): Promise<User> {
+    try {
+      const user = await this.prisma.user.findUniqueOrThrow({
+        where: {
+          id,
+          deletedAt: null,
+        },
+      });
+
+      return user;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(`user with id ${id} not found`);
+        }
+      }
+      throw new ServiceUnavailableException(
+        'fetching user from database failed',
+      );
     }
   }
 }

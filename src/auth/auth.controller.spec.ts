@@ -12,32 +12,32 @@ const testUser = {
   password: '@Alice123',
 };
 
-const testUsersWithoutPassword = [
-  {
-    id: 'cltjz0s3r000008lcerwyggyb',
-    email: 'alice@test.com',
-    displayName: 'alice test',
-    createdAt: '2024-01-01T01:01:01.000Z',
-    updatedAt: '2024-01-01T01:01:01.000Z',
-    deletedAt: null,
-  },
-  {
-    id: 'cltjzdbi1000008l18pxw8gn2',
-    email: 'bob@test.com',
-    displayName: 'bob test',
-    createdAt: '2024-02-02T02:02:02.000Z',
-    updatedAt: '2024-02-02T02:02:02.000Z',
-    deletedAt: null,
-  },
-  {
-    id: 'cltjzdjp0000108l1hh2ram9u',
-    email: 'charlie@test.com',
-    displayName: 'charlie test',
-    createdAt: '2024-03-03T03:03:03.000Z',
-    updatedAt: '2024-03-03T03:03:03.000Z',
-    deletedAt: null,
-  },
-];
+// const testUsersWithoutPassword = [
+//   {
+//     id: 'cltjz0s3r000008lcerwyggyb',
+//     email: 'alice@test.com',
+//     displayName: 'alice test',
+//     createdAt: '2024-01-01T01:01:01.000Z',
+//     updatedAt: '2024-01-01T01:01:01.000Z',
+//     deletedAt: null,
+//   },
+//   {
+//     id: 'cltjzdbi1000008l18pxw8gn2',
+//     email: 'bob@test.com',
+//     displayName: 'bob test',
+//     createdAt: '2024-02-02T02:02:02.000Z',
+//     updatedAt: '2024-02-02T02:02:02.000Z',
+//     deletedAt: null,
+//   },
+//   {
+//     id: 'cltjzdjp0000108l1hh2ram9u',
+//     email: 'charlie@test.com',
+//     displayName: 'charlie test',
+//     createdAt: '2024-03-03T03:03:03.000Z',
+//     updatedAt: '2024-03-03T03:03:03.000Z',
+//     deletedAt: null,
+//   },
+// ];
 
 const testUserWithHashedPassword = {
   id: 'cltjz0s3r000008lcerwyggyb',
@@ -89,7 +89,7 @@ describe('AuthController', () => {
     it('should check user email/password, signin and return access_token JWT', async () => {
       const response = await controller.signIn(testUser);
 
-      expect(response.access_token).toBeTruthy();
+      expect(response.accessToken).toBeTruthy();
       expect(service.signIn).toHaveBeenCalledWith(testUser);
     });
   });

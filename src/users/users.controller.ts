@@ -12,10 +12,9 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User } from '@prisma/client';
 import { cuidPipe } from '../pipes/cuid.pipe';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { UserWithoutPasswordEntity } from './entities/user.entity';
+import { AccessTokenGuard } from '../auth/guards/accessToken.guard';
+import { UserSanitizedEntity } from './entities/user.entity';
 import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('users')
@@ -28,26 +27,24 @@ export class UsersController {
   @ApiResponse({
     status: 201,
     description: 'the created record',
-    type: UserWithoutPasswordEntity,
+    type: UserSanitizedEntity,
   })
   @ApiResponse({
     status: 503,
     description: 'the server could not process your request at this moment',
   })
-  create(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<Omit<User, 'password'>> {
+  create(@Body() createUserDto: CreateUserDto): Promise<UserSanitizedEntity> {
     return this.usersService.create(createUserDto);
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   @Get()
   @ApiResponse({
     status: 200,
     description: 'the found record(s)',
     isArray: true,
-    type: UserWithoutPasswordEntity,
+    type: UserSanitizedEntity,
   })
   @ApiResponse({
     status: 401,
@@ -57,17 +54,17 @@ export class UsersController {
     status: 503,
     description: 'the server could not process your request at this moment',
   })
-  findAll(): Promise<Omit<User, 'password'>[]> {
+  findAll(): Promise<UserSanitizedEntity[]> {
     return this.usersService.findAll();
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   @Get(':id')
   @ApiResponse({
     status: 200,
     description: 'the found record',
-    type: UserWithoutPasswordEntity,
+    type: UserSanitizedEntity,
   })
   @ApiResponse({
     status: 401,
@@ -78,17 +75,17 @@ export class UsersController {
     status: 503,
     description: 'the server could not process your request at this moment',
   })
-  findOne(@Param('id', cuidPipe) id: string): Promise<Omit<User, 'password'>> {
+  findOne(@Param('id', cuidPipe) id: string): Promise<UserSanitizedEntity> {
     return this.usersService.findOne(id);
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   @Patch(':id')
   @ApiResponse({
     status: 200,
     description: 'the updated record',
-    type: UserWithoutPasswordEntity,
+    type: UserSanitizedEntity,
   })
   @ApiResponse({
     status: 401,
@@ -106,17 +103,17 @@ export class UsersController {
   update(
     @Param('id', cuidPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<Omit<User, 'password'>> {
+  ): Promise<UserSanitizedEntity> {
     return this.usersService.update(id, updateUserDto);
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   @Delete(':id')
   @ApiResponse({
     status: 200,
     description: 'the deleted record',
-    type: UserWithoutPasswordEntity,
+    type: UserSanitizedEntity,
   })
   @ApiResponse({
     status: 401,
@@ -131,7 +128,7 @@ export class UsersController {
     status: 503,
     description: 'the server could not process your request at this moment',
   })
-  remove(@Param('id', cuidPipe) id: string): Promise<Omit<User, 'password'>> {
+  remove(@Param('id', cuidPipe) id: string): Promise<UserSanitizedEntity> {
     return this.usersService.remove(id);
   }
 }
