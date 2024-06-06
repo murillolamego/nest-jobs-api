@@ -24,7 +24,7 @@ export class JobsService {
     }
   }
 
-  async findAll(): Promise<Omit<Job, 'password'>[]> {
+  async findAll(): Promise<Job[]> {
     try {
       const jobs = await this.prisma.job.findMany({
         where: {
@@ -40,7 +40,7 @@ export class JobsService {
     }
   }
 
-  async findOne(id: string): Promise<Omit<Job, 'password'>> {
+  async findOne(id: string): Promise<Job> {
     try {
       const job = await this.prisma.job.findUniqueOrThrow({
         where: {
@@ -62,10 +62,115 @@ export class JobsService {
     }
   }
 
-  async update(
-    id: string,
-    updateJobDto: UpdateJobDto,
-  ): Promise<Omit<Job, 'password'>> {
+  async findByTitle(title: string): Promise<Job[]> {
+    try {
+      const job = await this.prisma.job.findMany({
+        where: {
+          title: {
+            contains: title,
+          },
+          deletedAt: null,
+        },
+      });
+
+      return job;
+    } catch (error) {
+      throw new ServiceUnavailableException(
+        'fetching jobs from database failed',
+      );
+    }
+  }
+
+  async findByCompanyName(companyName: string): Promise<Job[]> {
+    try {
+      const job = await this.prisma.job.findMany({
+        where: {
+          companyName: {
+            contains: companyName,
+          },
+          deletedAt: null,
+        },
+      });
+
+      return job;
+    } catch (error) {
+      throw new ServiceUnavailableException(
+        'fetching jobs from database failed',
+      );
+    }
+  }
+
+  async findByLocation(location: string): Promise<Job[]> {
+    try {
+      const job = await this.prisma.job.findMany({
+        where: {
+          location: {
+            contains: location,
+          },
+          deletedAt: null,
+        },
+      });
+
+      return job;
+    } catch (error) {
+      throw new ServiceUnavailableException(
+        'fetching jobs from database failed',
+      );
+    }
+  }
+
+  async findByLocationType(locationType: string): Promise<Job[]> {
+    try {
+      const job = await this.prisma.job.findMany({
+        where: {
+          locationType,
+          deletedAt: null,
+        },
+      });
+
+      return job;
+    } catch (error) {
+      throw new ServiceUnavailableException(
+        'fetching jobs from database failed',
+      );
+    }
+  }
+
+  async findBySeniority(seniority: string): Promise<Job[]> {
+    try {
+      const job = await this.prisma.job.findMany({
+        where: {
+          seniority,
+          deletedAt: null,
+        },
+      });
+
+      return job;
+    } catch (error) {
+      throw new ServiceUnavailableException(
+        'fetching jobs from database failed',
+      );
+    }
+  }
+
+  async findByType(type: string): Promise<Job[]> {
+    try {
+      const job = await this.prisma.job.findMany({
+        where: {
+          type,
+          deletedAt: null,
+        },
+      });
+
+      return job;
+    } catch (error) {
+      throw new ServiceUnavailableException(
+        'fetching jobs from database failed',
+      );
+    }
+  }
+
+  async update(id: string, updateJobDto: UpdateJobDto): Promise<Job> {
     try {
       const updatedJob = await this.prisma.job.update({
         where: {
@@ -86,7 +191,7 @@ export class JobsService {
     }
   }
 
-  async remove(id: string): Promise<Omit<Job, 'password'>> {
+  async remove(id: string): Promise<Job> {
     try {
       const deletedJob = await this.prisma.job.delete({
         where: {

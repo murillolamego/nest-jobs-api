@@ -35,6 +35,48 @@ export class JobsController {
 
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
+  @Get('title/:title')
+  findOneByTitle(@Param('title') title: string) {
+    return this.jobsService.findByTitle(title);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AccessTokenGuard)
+  @Get('company-name/:company-name')
+  findByCompanyName(@Param('company-name') companyName: string) {
+    return this.jobsService.findByCompanyName(companyName);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AccessTokenGuard)
+  @Get('location/:location')
+  findByLocation(@Param('location') location: string) {
+    return this.jobsService.findByLocation(location);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AccessTokenGuard)
+  @Get('location-type/:location-type')
+  findByLocationType(@Param('location-type') locationType: string) {
+    return this.jobsService.findByLocationType(locationType);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AccessTokenGuard)
+  @Get('seniority/:seniority')
+  findBySeniority(@Param('seniority') seniority: string) {
+    return this.jobsService.findBySeniority(seniority);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AccessTokenGuard)
+  @Get('type/:type')
+  findByType(@Param('type') type: string) {
+    return this.jobsService.findByType(type);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AccessTokenGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.jobsService.findOne(id);

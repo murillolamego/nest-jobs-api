@@ -73,6 +73,29 @@ export class UsersService {
     }
   }
 
+  async findOneByEmail(email: string): Promise<UserSanitizedEntity> {
+    try {
+      const user = await this.prisma.user.findUniqueOrThrow({
+        where: {
+          email,
+          deletedAt: null,
+        },
+      });
+      const userSanitized = exclude(user, ['password', 'refreshToken']);
+
+      return userSanitized;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(`user with email ${email} not found`);
+        }
+      }
+      throw new ServiceUnavailableException(
+        'fetching user from database failed',
+      );
+    }
+  }
+
   async update(
     id: string,
     updateUserDto: UpdateUserDto,
